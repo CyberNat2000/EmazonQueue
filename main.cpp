@@ -18,7 +18,7 @@ void wylicz(int& czasTicka, queue<Zgloszenie>& lista, const Zegar zegar){//ale j
     lista.pop();
     wylicz(czasTicka, lista, zegar);
     }
-    else lista.front().czasNadejscia -= czasTicka;
+    else lista.front().czasRealizacji -= czasTicka;
 }
 int main(){
     Config mojeDane = wczytajConfig("pliki/config.txt");
