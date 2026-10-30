@@ -11,7 +11,7 @@ string getCzas(const int& sekundy, const Zegar zegar) {
     strftime(bufor, sizeof(bufor), "%H:%M %d.%m.%Y", data);
     return string(bufor);
 }
-int wylicz(int& czasTicka, queue<Zgloszenie>& lista, const Zegar zegar){//ale jestem śmieszny ha ha
+void wylicz(int& czasTicka, queue<Zgloszenie>& lista, const Zegar zegar){//ale jestem śmieszny ha ha
     if(lista.front().czasRealizacji < czasTicka){
     czasTicka -= lista.front().czasRealizacji;
     cout << "Przesyłka o id: " << lista.front().id << " została nadana o " << getCzas(lista.front().czasRealizacji, zegar) << endl;
