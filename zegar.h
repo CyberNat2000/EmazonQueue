@@ -24,6 +24,9 @@ class Zegar {
         int Getczas() const{
             return czas;
         }
+        const int Getmnoznik() const{
+            return mnoznik;
+        }
     private:
         const int mnoznik;
         int czas;

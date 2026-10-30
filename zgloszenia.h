@@ -46,7 +46,7 @@ queue<Zgloszenie> zgrajZgloszenia(const string& nazwaPliku) {
         if (!getline(ss, wartosc, ',')) continue;
         z.czasNadejscia = konwertujDate(wartosc);
         if (!getline(ss, wartosc, ',')) continue;
-        z.czasRealizacji = stoi(wartosc) * 3600;
+        z.czasRealizacji = stof(wartosc) * 3600;
         if (!getline(ss, wartosc, ',')) continue;
         z.priorytet = stoi(wartosc);
         if (!getline(ss, wartosc, ',')) continue;
