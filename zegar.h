@@ -21,10 +21,10 @@ class Zegar {
         void tick(){
             czas += mnoznik;
         }
-        int Getczas() const{
+        int getczas() const{
             return czas;
         }
-        const int Getmnoznik() const{
+        const int getmnoznik() const{
             return mnoznik;
         }
     private:
