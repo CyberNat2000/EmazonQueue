@@ -44,11 +44,18 @@ queue<Zgloszenie> sortuj(queue<Zgloszenie> zgloszenia) {
     }
     return wynik;
 }
-int wybierz(int& kat, queue<Zgloszenie> zgloszenia, const Zegar zegar){
+bool sprawdz(const int id, vector<Pracownicy> osoba){
+    while(!osoba.empty()){
+        if(osoba.front().Pid == id)return true;
+        osoba.pop();
+    }
+    return false;
+}
+int wybierz(int& kat, queue<Zgloszenie> zgloszenia, const Zegar zegar, vector<Pracownicy>& osoba){
     int wazne;
     bool GrubyNieZyje = true;
     while(GrubyNieZyje && !zgloszenia.empty()){
-        if(zgloszenia.front().wymaganyTypWykonawcy != kat||zgloszenia.front().czasNadejscia>zegar.getczas())zgloszenia.pop();
+        if(zgloszenia.front().wymaganyTypWykonawcy != kat||zgloszenia.front().czasNadejscia>zegar.getczas()||sprawdz(zgloszenia.front().id, osoba);)zgloszenia.pop();
         else{
             int = zgloszenia.front().id;
             GrubyNieZyje = false;
@@ -67,7 +74,7 @@ void dosylaj(const int id, vector<Pracownicy>& osoba, queue<Zgloszenie>& paczki,
     wynik << "Przesyłka o id: " << paczki.front().id << " została nadana o " << getCzas(czasTicka, zegar) << endl;
     cout << "Przesyłka o id: " << paczki.front().id << " została nadana o " << getCzas(czasTicka, zegar) << endl;
     paczki.pop();
-    if(wybierz(osoba.front().specjalizacja, paczki, zegar) != -1 ) dosylaj(wybierz(osoba.front().specjalizacja, paczki, zegar), paczki, zegar, wynik, czasTicka);
+    if(wybierz(osoba.front().specjalizacja, paczki, zegar) != -1 ) dosylaj(wybierz(osoba.front().specjalizacja, paczki, zegar, osoba), paczki, zegar, wynik, czasTicka);
     }
     else{
         paczki.front().czasRealizacji -= czasTicka;
@@ -116,7 +123,7 @@ int main(){
                     dosylaj(osoby.front().Pid, osoby, lista, zegar, wynik);
                 }
                 else{
-                    temp2 = wybierz(osoby.front().getSpecjalizacja, zegar);
+                    temp2 = wybierz(osoby.front().getSpecjalizacja, zegar, osoby);
                     if(temp2 == -1){
                         temp.push(osoby.front());
                         osoby.pop();
@@ -127,10 +134,12 @@ int main(){
                 }
             }
             zegar.tick();
+            while(!temp.empty()){
+                osoby.push(temp.front());
+                temp.pop();
+            }
         }
         }
-        break;
-    case 3:
         break;
     }
     cout << "Wszystko wysłane";
