@@ -125,8 +125,8 @@ int main(){
                         dosylaj(temp2, osoby, lista, zegar, wynik);
                     }
                 }
-                zegar.tick();
             }
+            zegar.tick();
         }
         }
         break;
