@@ -9,14 +9,13 @@
 using namespace std;
 struct Zgloszenie{
     static int licznik;
-    const int id = licznik;
+    int id = licznik;
     int czasNadejscia;
     int czasRealizacji;
     int priorytet;
     int deadline;
     int wymaganyTypWykonawcy;
-    Zgloszenie(){
-        licznik++;
+    Zgloszenie(): id(licznik++){
     }
 };
 int konwertujDate(const string& data){
