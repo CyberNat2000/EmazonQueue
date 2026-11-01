@@ -2,11 +2,13 @@
 #include <queue>
 #include <vector>
 #include <fstream>
+#include <string>
 #include <ctime>
 #include "zegar.h"
 #include "konfig.h"
 #include "zgloszenia.h"
 #include "pracownicy.h"
+using namespace std;
 string getCzas(const int& sekundy, const Zegar zegar) {
     time_t czas_t = static_cast<std::time_t>(zegar.getczas() + (zegar.getmnoznik()-sekundy));
     tm* data = localtime(&czas_t);
@@ -47,34 +49,37 @@ queue<Zgloszenie> sortuj(queue<Zgloszenie> zgloszenia) {
 bool sprawdz(const int id, vector<Pracownicy> osoba){
     while(!osoba.empty()){
         if(osoba.front().Pid == id)return true;
-        osoba.pop();
+        osoba.erase(osoba.begin());
     }
     return false;
 }
-int wybierz(int& kat, queue<Zgloszenie> zgloszenia, const Zegar zegar, vector<Pracownicy>& osoba){
-    int wazne;
+int wybierz(int kat, queue<Zgloszenie> zgloszenia, const Zegar zegar, vector<Pracownicy>& osoba){
+    int wazne = -1;
     bool GrubyNieZyje = true;
     while(GrubyNieZyje && !zgloszenia.empty()){
-        if(zgloszenia.front().wymaganyTypWykonawcy != kat||zgloszenia.front().czasNadejscia>zegar.getczas()||sprawdz(zgloszenia.front().id, osoba);)zgloszenia.pop();
+        if(zgloszenia.front().wymaganyTypWykonawcy != kat||zgloszenia.front().czasNadejscia>zegar.getczas()||sprawdz(zgloszenia.front().id, osoba))zgloszenia.pop();
         else{
-            int = zgloszenia.front().id;
+            wazne = zgloszenia.front().id;
             GrubyNieZyje = false;
         }
     }
-    if(wazne.empty()) return -1;
     return wazne;
 }
-void dosylaj(const int id, vector<Pracownicy>& osoba, queue<Zgloszenie>& paczki, const Zegar zegar, ostream& wynik, int& czasTicka = zegar.getmnoznik()){
+void dosylaj(const int id, vector<Pracownicy>& osoba, queue<Zgloszenie>& paczki, const Zegar zegar, ostream& wynik, int& czasTicka){
     queue<Zgloszenie> tymczasowa;
-    while true{
-        paczki.front().id == id ? break; :{ tymczasowa.push(paczki.front()) paczki.pop();}
+    while(true){
+        if(paczki.front().id == id)break; 
+        else{ 
+            tymczasowa.push(paczki.front()); 
+            paczki.pop();
+        }
     }
     if(paczki.front().czasRealizacji < czasTicka){
     czasTicka -= paczki.front().czasRealizacji;
     wynik << "Przesyłka o id: " << paczki.front().id << " została nadana o " << getCzas(czasTicka, zegar) << endl;
     cout << "Przesyłka o id: " << paczki.front().id << " została nadana o " << getCzas(czasTicka, zegar) << endl;
     paczki.pop();
-    if(wybierz(osoba.front().specjalizacja, paczki, zegar) != -1 ) dosylaj(wybierz(osoba.front().specjalizacja, paczki, zegar, osoba), paczki, zegar, wynik, czasTicka);
+    if(wybierz(osoba.front().getSpecjalizacja(), paczki, zegar, osoba) != -1 ) dosylaj(wybierz(osoba.front().getSpecjalizacja(), paczki, zegar, osoba), osoba, paczki, zegar, wynik, czasTicka);
     }
     else{
         paczki.front().czasRealizacji -= czasTicka;
@@ -116,27 +121,28 @@ int main(){
         vector<Pracownicy> osoby = generujPracownikow("pliki/config.txt");
         queue<Zgloszenie> lista = sortuj(zgrajZgloszenia("pliki/lista.txt"));
         vector<Pracownicy> temp;
+        int mnoznik = zegar.getmnoznik();
         int temp2;
         while(!lista.empty()){
             while(!osoby.empty()){
                 if(osoby.front().zajetosc){
-                    dosylaj(osoby.front().Pid, osoby, lista, zegar, wynik);
+                    dosylaj(osoby.front().Pid, osoby, lista, zegar, wynik,  mnoznik);
                 }
                 else{
-                    temp2 = wybierz(osoby.front().getSpecjalizacja, zegar, osoby);
+                    temp2 = wybierz(osoby.front().getSpecjalizacja(), lista, zegar, osoby);
                     if(temp2 == -1){
-                        temp.push(osoby.front());
-                        osoby.pop();
+                        temp.push_back(osoby.front());
+                        osoby.erase(osoby.begin());
                     }
                     else {
-                        dosylaj(temp2, osoby, lista, zegar, wynik);
+                        dosylaj(temp2, osoby, lista, zegar, wynik, mnoznik);
                     }
                 }
             }
             zegar.tick();
             while(!temp.empty()){
-                osoby.push(temp.front());
-                temp.pop();
+                osoby.push_back(temp.front());
+                temp.erase(temp.begin());
             }
         }
         }
